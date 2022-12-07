@@ -7,30 +7,30 @@ const request = axios.create({
 // 请求拦截器统一注入token
 request.interceptors.request.use(config => {
   const { users } = store.state
-  if (users && users.token) {
-    config.headers.Authorization = `Bear ${users.token}`
+  if (users && users.data.token) {
+    config.headers.Authorization = `Bearer ${users.data.token}`
   }
   return config
 }, err => Promise.reject(err)
 )
-// 请求拦截器脱掉一层data
+// 相应拦截器脱掉一层data
 request.interceptors.response.use(res => res.data, async err => {
   if (err.response && err.response.status === 401) {
     const { users } = store.state
-    if (!users && !users.refresh_token) return router.push('/login')
+    if (!users || !users.data.refresh_token) return router.push('/login')
     // 如果有refresh_token，则请求获取新的 token
     try {
       const res = await axios({
         method: 'PUT',
         url: '/v1_0/authorizations',
         headers: {
-          Authorization: `Bearer ${users.refresh_token}`
+          Authorization: `Bearer ${users.data.refresh_token}`
         }
       })
 
       // 如果获取成功，则把新的 token 更新到容器中
       console.log('刷新 token  成功', res)
-      store.commit('setUser', {
+      store.commit('updateUsers', {
         token: res.data.data.token, // 最新获取的可用 token
         refresh_token: users.refresh_token // 还是原来的 refresh_token
       })
@@ -41,9 +41,10 @@ request.interceptors.response.use(res => res.data, async err => {
       return request(err.config)
     } catch (err2) {
       // 如果获取失败，直接跳转 登录页
-      console.log('请求刷线 token 失败', err2)
-      this.$router.push('/login')
+      console.log('请求刷新 token 失败', err2)
+      router.push('/login')
     }
   }
   return Promise.reject(err)
 })
+export default request

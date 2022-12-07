@@ -1,23 +1,21 @@
 <template>
-  <div>
-    <router-view />
-  </div>
+  <div>视频</div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: "VideoIndex",
   components: {},
   props: {},
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {},
   watch: {},
-  created () {},
-  mounted () {},
-  methods: {}
-}
+  created() {},
+  mounted() {},
+  methods: {},
+};
 </script>
 <style scoped lang ='less'>
 </style>

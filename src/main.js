@@ -3,10 +3,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import 'vant/lib/index.css'
-import 'src/styles/iconfont.css'
+import '@/styles/iconfont.css'
 // 动态设置基准值
 import 'amfe-flexible'
 import Vant from 'vant'
+import '@/utils/dayjs'
 Vue.use(Vant)
 
 Vue.config.productionTip = false
